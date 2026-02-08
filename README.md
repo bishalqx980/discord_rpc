@@ -7,7 +7,7 @@ pyinstaller ^
 --clean ^
 --onefile ^
 --uac-admin ^
---icon=icon.png ^
+--icon=icon.ico ^
 --name DiscordRPC ^
 main.py
 ```

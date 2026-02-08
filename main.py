@@ -5,11 +5,21 @@ from time import time, sleep
 from uuid import uuid4
 from pypresence import Presence
 
-from logger import setup_logging
-
 # Variables
 DATA_URL = "https://gist.githubusercontent.com/bishalqx980/8b023d11425997da267e1f601d94082d/raw/discord_rpc.json"
-logger = setup_logging()
+BISHAL = """
+Developed by
+ ______     __     ______     __  __     ______     __        
+/\  == \   /\ \   /\  ___\   /\ \_\ \   /\  __ \   /\ \       
+\ \  __<   \ \ \  \ \___  \  \ \  __ \  \ \  __ \  \ \ \____  
+ \ \_____\  \ \_\  \/\_____\  \ \_\ \_\  \ \_\ \_\  \ \_____\ 
+  \/_____/   \/_/   \/_____/   \/_/\/_/   \/_/\/_/   \/_____/ 
+   
+    GitHub: https://github.com/bishalqx980
+"""
+
+def log(message):
+    print(f"[+] {message}")
 
 
 def send_webhook_message(webhook_url, message):
@@ -21,25 +31,14 @@ def send_webhook_message(webhook_url, message):
 
         return res
     except Exception as err:
-        logger.error(err)
+        log(err)
 
 
 def main():
-    BISHAL = """
-Developed by
- ______     __     ______     __  __     ______     __        
-/\  == \   /\ \   /\  ___\   /\ \_\ \   /\  __ \   /\ \       
-\ \  __<   \ \ \  \ \___  \  \ \  __ \  \ \  __ \  \ \ \____  
- \ \_____\  \ \_\  \/\_____\  \ \_\ \_\  \ \_\ \_\  \ \_____\ 
-  \/_____/   \/_/   \/_____/   \/_/\/_/   \/_/\/_/   \/_____/ 
-   
-    GitHub: https://github.com/bishalqx980
-"""
-
-    print(BISHAL)
+    log(BISHAL)
 
     # Getting Device ID
-    logger.info("Verifying device...")
+    log("Verifying device...")
 
     if os.path.exists("verified.log"):
         with open("verified.log", "r") as f:
@@ -50,17 +49,17 @@ Developed by
             f.write(str(DEVICE_ID))
     
     # Fetching Data
-    logger.info("Fetching data...")
+    log("Fetching data...")
 
     try:
         res = requests.get(DATA_URL)
         DATA = res.json() if res.ok else None
     except Exception as err:
-        logger.error(f"Error fetching data: {err}")
+        log(f"Error fetching data: {err}")
         return
     
     if not DATA:
-        logger.error("Something went wrong... (Data wasn't found)")
+        log("Something went wrong... (Data wasn't found)")
         return
     
     # Custom Status
@@ -79,7 +78,7 @@ Developed by
     WEBHOOK_URL = DATA.get("webhook_url")
 
     # Connecting RPC
-    logger.info(f"Connecting RPC - Starting Playing with status: {STATUS}")
+    log(f"Connecting RPC - Starting Playing with status: {STATUS}")
 
     try:
         rpc = Presence(CLIENT_ID)
@@ -101,9 +100,9 @@ Developed by
 
         # Cleaning Console
         os.system("cls" if os.name == "nt" else "clear")
-        print(f"{BISHAL}\nDiscord RPC Running...", flush=True)
+        print(f"{BISHAL}\nDiscord RPC Running...")
     except Exception as err:
-        logger.error(f"Error occurred while connecting RPC: {err}")
+        log(f"Error occurred while connecting RPC: {err}")
         return
     
     # 15sec loop
@@ -111,7 +110,7 @@ Developed by
         while True:
             sleep(15)
     except KeyboardInterrupt:
-        logger.info("Exiting...")
+        log("Exiting...")
 
 
 if __name__ == "__main__":
