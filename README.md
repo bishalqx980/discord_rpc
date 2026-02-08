@@ -1,5 +1,13 @@
 # discord_rpc
 
+`status.txt` - for custom status
+
 ```
-pyinstaller --onefile --icon=logo.png --add-data "config.json;." main.py
+pyinstaller ^
+--clean ^
+--onefile ^
+--uac-admin ^
+--icon=icon.png ^
+--name DiscordRPC ^
+main.py
 ```
