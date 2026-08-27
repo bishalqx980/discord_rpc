@@ -3,20 +3,10 @@ import requests
 from datetime import datetime, timezone
 from time import time, sleep
 from uuid import uuid4
-from pypresence import Presence
 
-# Variables
-DATA_URL = "https://gist.githubusercontent.com/bishalqx980/8b023d11425997da267e1f601d94082d/raw/discord_rpc.json"
-BISHAL = """
-Developed by
- ______     __     ______     __  __     ______     __        
-/\  == \   /\ \   /\  ___\   /\ \_\ \   /\  __ \   /\ \       
-\ \  __<   \ \ \  \ \___  \  \ \  __ \  \ \  __ \  \ \ \____  
- \ \_____\  \ \_\  \/\_____\  \ \_\ \_\  \ \_\ \_\  \ \_____\ 
-  \/_____/   \/_/   \/_____/   \/_/\/_/   \/_/\/_/   \/_____/ 
-   
-    GitHub: https://github.com/bishalqx980
-"""
+from pypresence import Presence
+from app import DATA_JSON, DATA_URL, BISHAL
+
 
 def log(message):
     print(f"[+] {message}")
@@ -37,7 +27,7 @@ def send_webhook_message(webhook_url, message):
 def main():
     log(BISHAL)
 
-    # Getting Device ID
+    # uuid4
     log("Verifying device...")
 
     if os.path.exists("verified.log"):
@@ -70,9 +60,7 @@ def main():
         with open("status.txt", "w") as f:
             STATUS = "Vibing"
             f.write(str(STATUS))
-        
-    
-    # Device ID
+            
     # Status
     CLIENT_ID = DATA.get("client_id")
     WEBHOOK_URL = DATA.get("webhook_url")
@@ -98,9 +86,7 @@ def main():
             )
         )
 
-        # Cleaning Console
-        os.system("cls" if os.name == "nt" else "clear")
-        print(f"{BISHAL}\nDiscord RPC Running...")
+        log(f"DiscordRPC is Running...")
     except Exception as err:
         log(f"Error occurred while connecting RPC: {err}")
         return

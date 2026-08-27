@@ -1,7 +1,14 @@
-__pycache__
-build/
-*.spec
+__pycache__/*
+*.pyc
+*.txt
 *.log
 
-log.txt
-status.txt
+backup
+build
+dist
+
+*.spec
+venv
+
+# Exception
+!requirements.txt
