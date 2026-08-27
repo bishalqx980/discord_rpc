@@ -1,13 +1,24 @@
 # discord_rpc
 
-`status.txt` - for custom status
+### Edit `status.txt` text message to display custom status.
+
+### [Download App](https://github.com/bishalqx980/discord_rpc/releases)
+
+> OR make your own build using `build_app.cmd` (python required)
+
+---
 
 ```
-pyinstaller ^
---clean ^
---onefile ^
---uac-admin ^
---icon=icon.ico ^
---name DiscordRPC ^
-main.py
+𝓐 𝓹𝓻𝓸𝓳𝓮𝓬𝓽 𝓸𝓯
+
+ ▄▄▄▄    ██▓  ██████  ██░ ██  ▄▄▄       ██▓    
+▓█████▄ ▓██▒▒██    ▒ ▓██░ ██▒▒████▄    ▓██▒    
+▒██▒ ▄██▒██▒░ ▓██▄   ▒██▀▀██░▒██  ▀█▄  ▒██░    
+▒██░█▀  ░██░  ▒   ██▒░▓█ ░██ ░██▄▄▄▄██ ▒██░    
+░▓█  ▀█▓░██░▒██████▒▒░▓█▒░██▓ ▓█   ▓██▒░██████▒
+░▒▓███▀▒░▓  ▒ ▒▓▒ ▒ ░ ▒ ░░▒░▒ ▒▒   ▓▒█░░ ▒░▓  ░
+▒░▒   ░  ▒ ░░ ░▒  ░ ░ ▒ ░▒░ ░  ▒   ▒▒ ░░ ░ ▒  ░
+ ░    ░  ▒ ░░  ░  ░   ░  ░░ ░  ░   ▒     ░ ░   
+ ░       ░        ░   ░  ░  ░      ░  ░    ░  ░
+      ░                                        
 ```
