@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord RPC Game Selector</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111214;
+            color: white;
+            padding: 40px;
+        }
+
+        input {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #1e1f22;
+            color: white;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #status {
+            width: 100%;
+            max-width: 500px;
+            margin: 10px 0;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        #status.loaded {
+            color: #57f287;
+        }
+
+        #status.error {
+            color: #ed4245;
+        }
+
+        #results {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 10px;
+        }
+
+        .game {
+            padding: 12px;
+            margin-bottom: 5px;
+            background: #1e1f22;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .game:hover {
+            background: #2b2d31;
+        }
+
+        #selected {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Search Game</h2>
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Loading games..."
+        autocomplete="off"
+        disabled
+    >
+
+    <div id="status">Loading data...</div>
+
+    <div id="results"></div>
+
+    <div id="selected"></div>
+
+    <script>
+        let games = [];
+
+        const searchInput = document.getElementById("search");
+        const results = document.getElementById("results");
+        const selected = document.getElementById("selected");
+        const status = document.getElementById("status");
+
+        fetch("https://discord.com/api/applications/detectable")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                games = data;
+
+                searchInput.disabled = false;
+                searchInput.placeholder = "Search game...";
+
+                status.textContent = `Loaded ${games.length.toLocaleString()} games`;
+                status.className = "loaded";
+            })
+            .catch(error => {
+                console.error("Failed to load applications:", error);
+
+                status.textContent = "Failed to load game data";
+                status.className = "error";
+
+                searchInput.placeholder = "Unable to load games";
+            });
+
+        searchInput.addEventListener("input", () => {
+            const query = searchInput.value.toLowerCase().trim();
+
+            results.innerHTML = "";
+
+            if (!query) {
+                return;
+            }
+
+            const filtered = games.filter(game =>
+                game.name &&
+                game.name.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                results.innerHTML = `
+                    <div class="game">
+                        No games found
+                    </div>
+                `;
+
+                return;
+            }
+
+            filtered.slice(0, 20).forEach(game => {
+                const element = document.createElement("div");
+
+                element.className = "game";
+                element.textContent = game.name;
+
+                element.addEventListener("click", () => {
+                    selectGame(game);
+                });
+
+                results.appendChild(element);
+            });
+        });
+
+        function selectGame(game) {
+            console.log("Game:", game.name);
+            console.log("Client ID:", game.id);
+
+            selected.innerHTML = `
+                <strong>Selected:</strong> ${game.name}<br>
+                <strong>Client ID:</strong> ${game.id}
+            `;
+
+            searchInput.value = game.name;
+            results.innerHTML = "";
+
+            const clientId = game.id;
+
+            console.log(clientId);
+        }
+    </script>
+
+</body>
+</html>
