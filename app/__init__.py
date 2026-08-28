@@ -2,8 +2,8 @@ import subprocess
 
 # version
 version = {
-    "__comment__": "major.minor.fix.commit",
-    "__version__": "1.1.0.11",
+    "__comment__": "major.minor.update.commit",
+    "__version__": "1.2.0.13",
     "status": "Stable"
 }
 
@@ -11,7 +11,6 @@ version = {
 # Constants
 CONFIG_PATH = "config.json"
 DEFAULT_CLIENT_ID = "1542855976913207296" # GTAVI App
-DEFAULT_WEBHOOK_URL = "https://discord.com/api/webhooks/1542853647967322163/_aoTXYM900NPbbeAu0-trhpz1SG5WTYqPCt8FHvxUSF9tDXcGqftZle5ACx_Pr3eqwXb"
 
 # CMD
 subprocess.run("cls", shell=True)
