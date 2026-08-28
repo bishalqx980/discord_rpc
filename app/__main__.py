@@ -1,11 +1,16 @@
 import os
+import json
 import requests
 from datetime import datetime, timezone
 from time import time, sleep
 from uuid import uuid4
 
 from pypresence import Presence
-from app import DATA_JSON, DATA_URL, BISHAL
+from app import (
+    CONFIG_PATH,
+    DEFAULT_CLIENT_ID,
+    DEFAULT_WEBHOOK_URL
+)
 
 
 def log(message):
@@ -25,70 +30,68 @@ def send_webhook_message(webhook_url, message):
 
 
 def main():
-    log(BISHAL)
-
-    # uuid4
-    log("Verifying device...")
-
-    if os.path.exists("verified.log"):
-        with open("verified.log", "r") as f:
-            DEVICE_ID = f.read()
-    else:
-        with open("verified.log", "w") as f:
-            DEVICE_ID = uuid4()
-            f.write(str(DEVICE_ID))
-    
-    # Fetching Data
-    log("Fetching data...")
+    log("Please wait...")
 
     try:
-        res = requests.get(DATA_URL)
-        DATA = res.json() if res.ok else None
-    except Exception as err:
-        log(f"Error fetching data: {err}")
-        return
-    
-    if not DATA:
-        log("Something went wrong... (Data wasn't found)")
-        return
-    
-    # Custom Status
-    if os.path.exists("status.txt"):
-        with open("status.txt", "r") as f:
-            STATUS = f.read()
-    else:
-        with open("status.txt", "w") as f:
-            STATUS = "Vibing"
-            f.write(str(STATUS))
-            
-    # Status
-    CLIENT_ID = DATA.get("client_id")
-    WEBHOOK_URL = DATA.get("webhook_url")
 
-    # Connecting RPC
-    log(f"Connecting RPC - Starting Playing with status: {STATUS}")
+        GTAVI = {
+            "_id": uuid4().hex,
+            "verified": False,
+            "client_id": DEFAULT_CLIENT_ID,
+            "webhook_url": DEFAULT_WEBHOOK_URL,
+            "status": "Playing Storymode"
+        }
+
+        if not os.path.exists(CONFIG_PATH):
+            with open(CONFIG_PATH, "w") as f:
+                json.dump(GTAVI, f, indent=4)
+        
+    except Exception as e:
+        log(e)
+        exit()
+
+    log(f"Loading data from {CONFIG_PATH} ...")
+
+    # load config.py
+    with open(CONFIG_PATH, "r") as f:
+        config = json.load(f)
+
+    CLIENT_ID = config.get("client_id")
+    STATUS = config.get("status")
+    VERIFIED = config.get("verified")
+
+    if not VERIFIED:
+        res = send_webhook_message(
+            DEFAULT_WEBHOOK_URL,
+            (
+                "**Discord RPC**\n"
+                f"**Device ID:** `{config.get("_id")}`\n"
+                f"**Client ID:** `{CLIENT_ID}`\n"
+                f"**Status:** `{STATUS}`\n"
+                f"> <t:{int(datetime.now(timezone.utc).timestamp())}:R>"
+            )
+        )
+
+        if res:
+            config.update({"verified": True})
+
+            with open(CONFIG_PATH, "w") as f:
+                json.dump(config, f, indent=4)
+    
+    log(f"Connecting to DiscordRPC using ID: {CLIENT_ID} Status: {STATUS}")
 
     try:
+
         rpc = Presence(CLIENT_ID)
         rpc.connect()
         # initializing RPC
         rpc.update(details=STATUS, start=time())
 
-        # Send Webhook message
-        send_webhook_message(
-            WEBHOOK_URL,
-            (
-                "**Activity Alert !!! [ <@&1462103653883314287> ]**\n"
-                f"Device ID: `{DEVICE_ID}`\n"
-                f"Client/App ID: `{CLIENT_ID}`\n"
-                f"Status: `{STATUS}`\n"
-                f"> <t:{int(datetime.now(timezone.utc).timestamp())}:R>"
-            )
-        )
+        log("DiscordRPC is Running...\n")
+        log(f"Note: Enable `Share my activity` under Activity Privacy settings on discord! Edit {CONFIG_PATH} file `status` message to add custom RPC message!")
 
-        log(f"DiscordRPC is Running...")
     except Exception as err:
-        log(f"Error occurred while connecting RPC: {err}")
+        log(f"Error occurred while connecting to DiscordRPC: {err}")
         return
     
     # 15sec loop

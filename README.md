@@ -1,6 +1,6 @@
 # discord_rpc
 
-### Edit `status.txt` text message to display custom status.
+- Download App, Run and show-off to your discord friends / server ...
 
 ### [Download App](https://github.com/bishalqx980/discord_rpc/releases)
 
