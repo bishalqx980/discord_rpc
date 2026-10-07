@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../icon.ico" type="image/x-icon">
     <title>Discord RPC Game Selector</title>
 
     <style>
@@ -11,6 +12,31 @@
             background: #111214;
             color: white;
             padding: 40px;
+        }
+
+        a {
+            color: rgb(0, 150, 255);
+        }
+
+        button {
+            border: solid 2px #444;
+            border-radius: 8px;
+
+            background-color: #2b2d31;
+            color: aliceblue;
+            padding: 5px;
+            cursor: pointer;
+
+            margin-left: 1px;
+            margin-right: 1px;
+
+            transition: 300ms;
+        }
+
+        button:hover {
+            color: #57f287;
+            border-color: #57f287;
+            box-shadow: 0px 0px 5px #57f287;
         }
 
         input {
@@ -70,10 +96,25 @@
             width: 100%;
             max-width: 500px;
         }
+
+        .credit {
+            color: #444;
+            text-align: center;
+            
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     </style>
 </head>
 
 <body>
+
+    <h1>DiscordRPC</h1>
+    <p>Show Discord what you're playing — real or fictional. An app that lets you customize your game status, switch Client IDs, and flex your current activity. 😎</p>
+
+    <a href="https://github.com/bishalqx980/discord_rpc/releases" target="_blank">Download App (GitHub Releases)</a>
 
     <h2>Search Game</h2>
 
@@ -90,6 +131,10 @@
     <div id="results"></div>
 
     <div id="selected"></div>
+
+    <p class="credit">
+        Made with ❤️ by <a href="https://github.com/bishalqx980">bishalqx980</a>
+    </p>
 
     <script>
         let games = [];
@@ -170,6 +215,7 @@
             selected.innerHTML = `
                 <strong>Selected:</strong> ${game.name}<br>
                 <strong>Client ID:</strong> ${game.id}
+                <button onclick="CopyText('${game.id}', this)">Copy</button>
             `;
 
             searchInput.value = game.name;
@@ -178,6 +224,16 @@
             const clientId = game.id;
 
             console.log(clientId);
+        }
+
+        function CopyText(text, element) {
+            navigator.clipboard.writeText(text);
+
+            element.textContent = "Copied";
+
+            setTimeout(() => {
+                element.textContent = "Copy";
+            }, 1500);
         }
     </script>
 
